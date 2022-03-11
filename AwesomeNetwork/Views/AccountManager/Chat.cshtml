@@ -1,0 +1,45 @@
+﻿@model AwesomeNetwork.ViewModels.ChatViewModel;
+
+<meta http-equiv="refresh" content="5">
+
+<div class="block-reg background-white">
+
+    <h4 class="center">Чат @Model.Sender.GetFullName() и @Model.Recipient.GetFullName()</h4>
+
+    <hr />
+
+    <label class="text-color-gray">Сообщения</label>
+
+    @if (@Model.History.Count() != 0)
+    {
+        @foreach (var message in @Model.History)
+        {
+            <div>
+                @message.Sender.GetFullName() : @message.Text
+            </div>
+        }
+    }
+    else
+    {
+        <div>
+            <label> Сообщений пока нет.</label>
+        </div>
+    }
+
+    <hr /> <hr />
+
+    <label class="text-color-gray">Новое сообщение</label>
+
+    <form class="frm" method="post" asp-controller="AccountManager" asp-action="NewMessage" asp-route-id="@Model.Recipient.Id">
+        <div>
+            <div class="mrgn">
+                <input asp-for="NewMessage.Text" class="form-control" />
+                <span asp-validation-for="NewMessage.Text" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="center">
+            <input class="btn_submit" type="submit" value="Отправить" />
+        </div>
+    </form>
+
+</div>

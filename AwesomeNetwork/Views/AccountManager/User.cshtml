@@ -1,0 +1,75 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using AwesomeNetwork.Models.Users;
+@inject SignInManager<User> SignInManager
+@inject UserManager<User> UserManager;
+
+@model AwesomeNetwork.ViewModels.Account.UserViewModel;
+
+@{
+    ViewData["Title"] = "Profile";
+}
+
+<div class="row background-white">
+
+    <div class="side">
+        <img class="main-img" src="@Model.User.Image" />
+
+        <form asp-controller="AccountManager" asp-action="UserEditor" class="frm" method="get">
+            <input class="enter_submit" type="submit" value="Редактировать" />
+        </form>
+    </div>
+
+    <div class="main">
+        <h4 class="center">@Model.User.GetFullName()</h4>
+        <hr />
+        <div><label class="text-color-gray">Статус: </label> @Model.User.Status </div>
+        <div><label class="text-color-gray">Дата рождения: </label> @Model.User.BirthDate </div>
+        <div><label class="text-color-gray">О себе: </label> @Model.User.About </div>
+        <div><label class="text-color-gray">Email: </label> @Model.User.Email </div>
+        <hr /><hr />
+
+        <div>
+            <div>
+                <label class="text-color-gray">Список друзей</label>
+            </div>
+
+            @if (@Model.Friends.Count() != 0)
+            {
+        <div>
+
+            @foreach (var user in @Model.Friends)
+            {
+                <div class="inline-list">
+                    <div class="center-block"><img class="user-img" src="@user.Image" /></div>
+                    <div class="center-block"><label>@user.GetFullName()</label></div>
+                    <div class="center-block">
+                        <form asp-controller="AccountManager" asp-action="Chat" asp-route-id="@user.Id" method="post">
+                            <button type="submit" class="btn btn-sm btn-primary width-but">
+                                Чат
+                            </button>
+                        </form>
+                    </div>
+                    <div class="center-block">
+                        <form asp-controller="AccountManager" asp-action="DeleteFriend" asp-route-id="@user.Id" method="post">
+                            <button type="submit" class="btn btn-sm btn-primary width-but">
+                                Удалить из друзей
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            }
+
+        </div>
+            }
+            else
+            {
+                <div>
+                    <label> У вас пока нет друзей.</label>
+                </div>
+            }
+
+        </div>
+
+    </div>
+
+</div>

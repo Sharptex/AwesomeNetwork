@@ -1,0 +1,51 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using AwesomeNetwork.Models.Users;
+@inject SignInManager<User> SignInManager;
+
+@model AwesomeNetwork.ViewModels.Account.SearchViewModel;
+
+
+<div class="block-reg background-white">
+
+    @if (@Model.UserList.Count() != 0)
+    {
+
+        @foreach (UserWithFriendExt user in @Model.UserList)
+        {
+            <div class="inline-list">
+                <div class="center-block"><img class="user-img" src="@user.Image" /></div>
+                <div class="center-block">@user.GetFullName() </div>
+                <div class="center-block">@user.Status </div>
+                <div class="center-block">@user.About </div>
+
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    @if (!@user.IsFriendWithCurrent)
+                    {
+                        <form asp-controller="AccountManager" asp-action="AddFriend" asp-route-id="@user.Id" method="post">
+                            <button type="submit" class="btn btn-sm btn-primary">
+                                Добавить в друзья
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-controller="AccountManager" asp-action="DeleteFriend" asp-route-id="@user.Id" method="post">
+                            <button type="submit" class="btn btn-sm btn-primary width-but">
+                                Удалить из друзей
+                            </button>
+                        </form>
+                    }
+                }
+            </div>
+        }
+    }
+    else
+    {
+        <div>
+            <label> Поиск не дал результатов.</label>
+        </div>
+    }
+
+
+</div>
